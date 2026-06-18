@@ -97,7 +97,8 @@ async function seed() {
       INSERT INTO artists (name, bio, image_url) VALUES 
       ('The Chillwaves', 'Cool and relaxing ambient vibes for study and relaxation.', '/uploads/images/the_chillwaves.svg'),
       ('Syntax Error', 'Energetic synthwave and techno tracks made by coders, for coders.', '/uploads/images/syntax_error.svg'),
-      ('Midnight Beats', 'Lofi, jazz hop, and downtempo rhythms for late-night thoughts.', '/uploads/images/midnight_beats.svg')
+      ('Midnight Beats', 'Lofi, jazz hop, and downtempo rhythms for late-night thoughts.', '/uploads/images/midnight_beats.svg'),
+      ('MCK', 'Talented Vietnamese rapper and songwriter, known for his versatile style and raw storytelling.', '/uploads/images/mck.svg')
       RETURNING id, name;
     `);
     const artists = artistsResult.rows;
@@ -106,13 +107,15 @@ async function seed() {
     const chillwavesId = artists.find(a => a.name === 'The Chillwaves').id;
     const syntaxErrorId = artists.find(a => a.name === 'Syntax Error').id;
     const midnightBeatsId = artists.find(a => a.name === 'Midnight Beats').id;
+    const mckId = artists.find(a => a.name === 'MCK').id;
 
     // Seed Albums
     const albumsResult = await pool.query(`
       INSERT INTO albums (title, cover_url, artist_id, release_year) VALUES 
       ('Ocean Breeze', '/uploads/images/ocean_breeze.svg', ${chillwavesId}, 2024),
       ('Dark Mode', '/uploads/images/dark_mode.svg', ${syntaxErrorId}, 2023),
-      ('Neon City', '/uploads/images/neon_city.svg', ${midnightBeatsId}, 2025)
+      ('Neon City', '/uploads/images/neon_city.svg', ${midnightBeatsId}, 2025),
+      ('HVL', '/uploads/images/hvl.svg', ${mckId}, 2026)
       RETURNING id, title;
     `);
     const albums = albumsResult.rows;
@@ -121,6 +124,7 @@ async function seed() {
     const oceanBreezeId = albums.find(a => a.title === 'Ocean Breeze').id;
     const darkModeId = albums.find(a => a.title === 'Dark Mode').id;
     const neonCityId = albums.find(a => a.title === 'Neon City').id;
+    const hvlId = albums.find(a => a.title === 'HVL').id;
 
     // Seed Songs
     await pool.query(`
@@ -130,7 +134,12 @@ async function seed() {
       ('Compile Success', 150, '/uploads/audio/compile_success.mp3', ${darkModeId}),
       ('Infinite Loop', 240, '/uploads/audio/infinite_loop.mp3', ${darkModeId}),
       ('Traffic Lights', 195, '/uploads/audio/traffic_lights.mp3', ${neonCityId}),
-      ('Rainy Streets', 220, '/uploads/audio/rainy_streets.mp3', ${neonCityId});
+      ('Rainy Streets', 220, '/uploads/audio/rainy_streets.mp3', ${neonCityId}),
+      ('Elegie', 120, '/uploads/audio/lost_in_the_waves.mp3', ${hvlId}),
+      ('CHEPHU', 195, '/uploads/audio/infinite_loop.mp3', ${hvlId}),
+      ('Oanh M = Thuoc', 180, '/uploads/audio/compile_success.mp3', ${hvlId}),
+      ('XAXOI', 215, '/uploads/audio/summer_lounge.mp3', ${hvlId}),
+      ('CAMON', 240, '/uploads/audio/traffic_lights.mp3', ${hvlId});
     `);
     console.log('Inserted Songs');
 

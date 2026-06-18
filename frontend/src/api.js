@@ -90,13 +90,15 @@ function ensureApiMode() {
 const SEED_ARTISTS = [
   { id: 1, name: 'The Chillwaves', bio: 'Cool and relaxing ambient vibes for study and relaxation.', image_url: '/uploads/images/the_chillwaves.svg' },
   { id: 2, name: 'Syntax Error', bio: 'Energetic synthwave and techno tracks made by coders, for coders.', image_url: '/uploads/images/syntax_error.svg' },
-  { id: 3, name: 'Midnight Beats', bio: 'Lofi, jazz hop, and downtempo rhythms for late-night thoughts.', image_url: '/uploads/images/midnight_beats.svg' }
+  { id: 3, name: 'Midnight Beats', bio: 'Lofi, jazz hop, and downtempo rhythms for late-night thoughts.', image_url: '/uploads/images/midnight_beats.svg' },
+  { id: 4, name: 'MCK', bio: 'Talented Vietnamese rapper and songwriter, known for his versatile style and raw storytelling.', image_url: '/uploads/images/mck.svg' }
 ];
 
 const SEED_ALBUMS = [
   { id: 1, title: 'Ocean Breeze', cover_url: '/uploads/images/ocean_breeze.svg', artist_id: 1, artist_name: 'The Chillwaves', release_year: 2024 },
   { id: 2, title: 'Dark Mode', cover_url: '/uploads/images/dark_mode.svg', artist_id: 2, artist_name: 'Syntax Error', release_year: 2023 },
-  { id: 3, title: 'Neon City', cover_url: '/uploads/images/neon_city.svg', artist_id: 3, artist_name: 'Midnight Beats', release_year: 2025 }
+  { id: 3, title: 'Neon City', cover_url: '/uploads/images/neon_city.svg', artist_id: 3, artist_name: 'Midnight Beats', release_year: 2025 },
+  { id: 4, title: 'HVL', cover_url: '/uploads/images/hvl.svg', artist_id: 4, artist_name: 'MCK', release_year: 2026 }
 ];
 
 const SEED_SONGS = [
@@ -105,7 +107,12 @@ const SEED_SONGS = [
   { id: 3, title: 'Compile Success', duration: 150, song_url: '/uploads/audio/compile_success.mp3', album_id: 2, album_title: 'Dark Mode', artist_id: 2, artist_name: 'Syntax Error', cover_url: '/uploads/images/dark_mode.svg' },
   { id: 4, title: 'Infinite Loop', duration: 240, song_url: '/uploads/audio/infinite_loop.mp3', album_id: 2, album_title: 'Dark Mode', artist_id: 2, artist_name: 'Syntax Error', cover_url: '/uploads/images/dark_mode.svg' },
   { id: 5, title: 'Traffic Lights', duration: 195, song_url: '/uploads/audio/traffic_lights.mp3', album_id: 3, album_title: 'Neon City', artist_id: 3, artist_name: 'Midnight Beats', cover_url: '/uploads/images/neon_city.svg' },
-  { id: 6, title: 'Rainy Streets', duration: 220, song_url: '/uploads/audio/rainy_streets.mp3', album_id: 3, album_title: 'Neon City', artist_id: 3, artist_name: 'Midnight Beats', cover_url: '/uploads/images/neon_city.svg' }
+  { id: 6, title: 'Rainy Streets', duration: 220, song_url: '/uploads/audio/rainy_streets.mp3', album_id: 3, album_title: 'Neon City', artist_id: 3, artist_name: 'Midnight Beats', cover_url: '/uploads/images/neon_city.svg' },
+  { id: 7, title: 'Elegie', duration: 120, song_url: '/uploads/audio/lost_in_the_waves.mp3', album_id: 4, album_title: 'HVL', artist_id: 4, artist_name: 'MCK', cover_url: '/uploads/images/hvl.svg' },
+  { id: 8, title: 'CHEPHU', duration: 195, song_url: '/uploads/audio/infinite_loop.mp3', album_id: 4, album_title: 'HVL', artist_id: 4, artist_name: 'MCK', cover_url: '/uploads/images/hvl.svg' },
+  { id: 9, title: 'Oanh M = Thuoc', duration: 180, song_url: '/uploads/audio/compile_success.mp3', album_id: 4, album_title: 'HVL', artist_id: 4, artist_name: 'MCK', cover_url: '/uploads/images/hvl.svg' },
+  { id: 10, title: 'XAXOI', duration: 215, song_url: '/uploads/audio/summer_lounge.mp3', album_id: 4, album_title: 'HVL', artist_id: 4, artist_name: 'MCK', cover_url: '/uploads/images/hvl.svg' },
+  { id: 11, title: 'CAMON', duration: 240, song_url: '/uploads/audio/traffic_lights.mp3', album_id: 4, album_title: 'HVL', artist_id: 4, artist_name: 'MCK', cover_url: '/uploads/images/hvl.svg' }
 ];
 
 let db = null;
@@ -115,6 +122,30 @@ function initMockDB() {
   const localData = localStorage.getItem('spotify_clone_mock_db');
   if (localData) {
     db = JSON.parse(localData);
+    
+    // Automatically upgrade database with new seed artists, albums, or songs if missing
+    let updated = false;
+    SEED_ARTISTS.forEach(artist => {
+      if (!db.artists.some(a => a.id === artist.id)) {
+        db.artists.push(artist);
+        updated = true;
+      }
+    });
+    SEED_ALBUMS.forEach(album => {
+      if (!db.albums.some(a => a.id === album.id)) {
+        db.albums.push(album);
+        updated = true;
+      }
+    });
+    SEED_SONGS.forEach(song => {
+      if (!db.songs.some(s => s.id === song.id)) {
+        db.songs.push(song);
+        updated = true;
+      }
+    });
+    if (updated) {
+      saveDB();
+    }
   } else {
     db = {
       users: [
