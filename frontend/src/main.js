@@ -1,3 +1,4 @@
+import './api';
 import AudioPlayer from './player';
 import {
   renderHome,
