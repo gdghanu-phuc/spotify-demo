@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Clone - Premium Web Music Player</title>
+  <!-- Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Boxicons for Modern Vector Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Left Sidebar Section -->
+    <aside class="sidebar">
+      <div class="nav-links">
+        <div class="logo">
+          <i class="bx bxl-spotify logo-icon"></i>
+          <span>Spotify</span>
+        </div>
+        <a href="#" class="nav-item active" id="nav-home">
+          <i class="bx bxs-home-alt-2"></i>
+          <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-search">
+          <i class="bx bx-search"></i>
+          <span>Search</span>
+        </a>
+      </div>
+
+      <div class="library-container">
+        <div class="library-header">
+          <div class="library-title">
+            <i class="bx bx-library"></i>
+            <span>Your Library</span>
+          </div>
+          <button class="add-playlist-btn" id="create-playlist-btn" title="Create Playlist">
+            <i class="bx bx-plus"></i>
+          </button>
+        </div>
+
+        <div class="library-list" id="library-playlists">
+          <!-- Playlists dynamically loaded here -->
+          <div class="auth-required-message">
+            <p>Log in to create and view playlists</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="main-panel">
+      <!-- Top Sticky Navigation Bar -->
+      <header class="top-nav">
+        <div class="nav-arrows">
+          <button class="arrow-btn" disabled><i class="bx bx-chevron-left"></i></button>
+          <button class="arrow-btn" disabled><i class="bx bx-chevron-right"></i></button>
+        </div>
+        
+        <!-- Search bar container (hidden by default, shown in search tab) -->
+        <div class="search-bar-container" id="search-bar-wrapper">
+          <i class="bx bx-search search-bar-icon"></i>
+          <input type="text" id="search-input" placeholder="What do you want to play?" autocomplete="off">
+        </div>
+
+        <div class="user-profile-controls" id="auth-controls">
+          <!-- Auth buttons when logged out -->
+          <button class="btn btn-text" id="btn-show-signup">Sign up</button>
+          <button class="btn btn-white" id="btn-show-login">Log in</button>
+        </div>
+      </header>
+
+      <!-- Scrollable Main View Container -->
+      <div class="content-view" id="main-view">
+        <!-- Rendered views go here (Home, Search, Liked Songs, Playlist, Album, Artist views) -->
+      </div>
+    </main>
+
+    <!-- Bottom Audio Player Control Bar -->
+    <footer class="player-bar">
+      <!-- Current Track Info Panel -->
+      <div class="track-info" id="player-track-info">
+        <div class="track-cover-placeholder">
+          <i class="bx bx-music"></i>
+        </div>
+        <div class="track-text">
+          <span class="track-name">Select a song</span>
+          <span class="track-artist">to start playing</span>
+        </div>
+        <button class="like-track-btn" id="player-like-btn" disabled>
+          <i class="bx bx-heart"></i>
+        </button>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="player-controls">
+        <div class="control-buttons">
+          <button class="player-btn" id="player-shuffle" title="Shuffle"><i class="bx bx-shuffle"></i></button>
+          <button class="player-btn" id="player-prev" title="Previous"><i class="bx bx-first-page"></i></button>
+          <button class="player-btn play-pause-btn" id="player-play-pause" title="Play"><i class="bx bx-play-circle"></i></button>
+          <button class="player-btn" id="player-next" title="Next"><i class="bx bx-last-page"></i></button>
+          <button class="player-btn" id="player-repeat" title="Repeat"><i class="bx bx-repeat"></i></button>
+        </div>
+        
+        <div class="playback-progress">
+          <span id="player-time-current">0:00</span>
+          <div class="progress-bar-container" id="progress-bar-wrapper">
+            <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%"></div>
+            <div class="progress-slider-thumb" id="progress-thumb"></div>
+          </div>
+          <span id="player-time-total">0:00</span>
+        </div>
+      </div>
+
+      <!-- Extra Controls (Volume & Queue placeholder) -->
+      <div class="extra-controls">
+        <button class="player-btn" id="player-mute" title="Mute/Unmute"><i class="bx bx-volume-full"></i></button>
+        <div class="volume-bar-container" id="volume-bar-wrapper">
+          <div class="volume-bar-fill" id="volume-bar-fill" style="width: 70%"></div>
+          <div class="volume-slider-thumb" id="volume-thumb"></div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Authenticate Modal (Login / Sign Up Popup) -->
+    <div class="modal-backdrop" id="auth-modal">
+      <div class="modal-content">
+        <button class="modal-close-btn" id="auth-modal-close"><i class="bx bx-x"></i></button>
+        <div class="modal-tabs">
+          <button class="modal-tab active" id="tab-login">Log In</button>
+          <button class="modal-tab" id="tab-signup">Sign Up</button>
+        </div>
+
+        <!-- Log In Form -->
+        <form id="form-login" class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email or Username</label>
+            <input type="text" id="login-email" required placeholder="Enter email or username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="Enter password">
+          </div>
+          <div class="auth-error-msg" id="login-error"></div>
+          <button type="submit" class="btn btn-green btn-block">Log In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="form-signup" class="auth-form hidden">
+          <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" required placeholder="Pick a username">
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email address</label>
+            <input type="email" id="signup-email" required placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required placeholder="Choose a password (min 6 chars)">
+          </div>
+          <div class="auth-error-msg" id="signup-error"></div>
+          <button type="submit" class="btn btn-green btn-block">Create Account</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
